@@ -26,16 +26,16 @@ function articleValidateUpdate(articleDetails){
     return Joi.validate(articleDetails,schemaArticle)
 }
 
-function articleValidateDelete(articleDetails){ 
+function articleValidateParams(articleDetails){ 
     const schemaArticle = {
-        _id : Joi.string().required()
+        _id : Joi.number().integer().required().error(() => 'Params _id is required')
     }
     return Joi.validate(articleDetails,schemaArticle)
 }
 function listArticleValidate(articleDetails){
     const schemaArticle = {
-        start : Joi.number().integer().required(),
-        limit : Joi.number().integer().min(1).max(100).required()
+        start : Joi.number().integer().required().error(() => 'Params start is required'),
+        limit : Joi.number().integer().min(1).max(100).required().error(() => 'Params limit is required')
     }
     return Joi.validate(articleDetails,schemaArticle)
 
@@ -45,6 +45,6 @@ function listArticleValidate(articleDetails){
 module.exports = {
     articleValidate: articleValidate,
     articleValidateUpdate:articleValidateUpdate,
-    articleValidateDelete:articleValidateDelete,
+    articleValidateParams:articleValidateParams,
     listArticleValidate:listArticleValidate
 }

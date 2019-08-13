@@ -4,7 +4,7 @@ const Joi = require('@hapi/joi')
 
 function authorValidate(authorDetails){
     const schemaAuthor = {
-        _id : Joi.string().required(),
+        _id : Joi.number().integer().required().error(() => 'Params _id is required'),
         author_id :  Joi.string().required()
         }
     return Joi.validate(authorDetails,schemaAuthor)
@@ -12,7 +12,7 @@ function authorValidate(authorDetails){
 
 function authorValidateAdd(authorDetails){
     const schemaAuthorAdd = {
-        _id : Joi.string().required(),
+        _id : Joi.number().integer().required().error(() => 'Params _id is required'),
         name :  Joi.string().required()
         }
     return Joi.validate(authorDetails,schemaAuthorAdd)

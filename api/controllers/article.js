@@ -2,6 +2,7 @@
 const _ = require('lodash') 
 const status = require('./../response/status')
 const schemaArticle = require('./../schema/articleDefinition').articleSchema
+const { articleValidateParams } = require('./../validation/article')
 
 
 async function list_article(req, res) {
@@ -25,7 +26,6 @@ async function list_article(req, res) {
     } catch (error) {
         status.bad_app('Article Not Found',res)
     }
-
 }
 
 async function add_article(req,res){
@@ -49,13 +49,12 @@ async function add_article(req,res){
 
 async function delete_author(req,res){
     const { authorValidate } = require('./../validation/author')
-    const article_id = req.query.id
     const authorDetails = _.pick(req.body, ['author_id'])
-    authorDetails['_id'] = article_id
+    authorDetails['_id'] = parseInt(req.query._id)
     const { error } = authorValidate(authorDetails)
     if(error) return status.bad_app(error,res)
         const findArticle =  await schemaArticle.findById(_.pick(authorDetails, ['_id']))
-        if(!findArticle) status.bad_app('Article Not Found',res)
+        if(!findArticle) status.bad_app('Author Not Found',res)
         try {
             const author = findArticle.author.id(authorDetails.author_id)
             author.remove()
@@ -63,7 +62,7 @@ async function delete_author(req,res){
             status.success_app('Author Deleted',res)
         } catch (error) {
             console.log(error)
-            status.bad_app('Cant Update article',res)
+            status.bad_app('Cant Deleted Author',res)
         }
 }
 
@@ -73,7 +72,7 @@ async function add_author(req,res){
     const { error } = authorValidateAdd(authorDetails)
     if(error) return status.bad_app(error,res)
     const findArticle =  await schemaArticle.findById(_.pick(authorDetails, ['_id']))
-    if(!findArticle) status.bad_app('Article Not Found',res)
+    if(!findArticle) status.bad_app('Author Not Found',res)
     try {
         findArticle.author.push(_.pick(authorDetails, ['name']))
         findArticle.save()
@@ -89,28 +88,28 @@ function list_author(){
 }
 
 async function update_article(req,res){
-    const article_id = req.query.id
+    const validateID ={}
+    validateID['_id'] = parseInt(req.query._id)
+    var { error } = articleValidateParams(validateID)
+    if(error) return status.bad_app(error,res)  
     const articleDetails = _.pick(req.body, ['title','subtitle','summary','detail'])
     const { articleValidateUpdate } = require('./../validation/article')
-    const { error } = articleValidateUpdate(articleDetails)
+    var { error } = articleValidateUpdate(articleDetails)
     if(error) return status.bad_app(error,res)
-    const filter = { _id: article_id };
+    const filter = { _id: validateID['_id'] };
     try {
         await schemaArticle.findOneAndUpdate(filter, articleDetails);
-         status.success_app('Author Saved',res)
-        
+        status.success_app('Article Saved',res)
     } catch (error) {
-        status.bad_app('Cant Update Article',res)
+        status.bad_app(error.codeName,res)
     }
  
 
 }
 async function delete_article(req,res){
-    const article_id = req.query.id
-    const { articleValidateDelete } = require('./../validation/article')
     const articleDetails= {}
-    articleDetails['_id'] = article_id
-    const { error } = articleValidateDelete(articleDetails)
+    articleDetails['_id'] = parseInt(req.query._id)
+    const { error } = articleValidateParams(articleDetails)
     if(error) return status.bad_app(error,res)
     try {
        const delArticle = await schemaArticle.findOneAndRemove(articleDetails);
