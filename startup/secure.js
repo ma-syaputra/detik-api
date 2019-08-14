@@ -3,8 +3,8 @@ const helmet = require('helmet')
 const rateLimit = require("express-rate-limit")
 module.exports = function(app) {
   const limiter = rateLimit({
-    windowMs: 1 * 1 * 1000, // 1 hour
-    max: 1
+    windowMs: 10 * 1 * 1000,
+    max: 240
   });
   app.use(limiter)
   app.use(helmet())

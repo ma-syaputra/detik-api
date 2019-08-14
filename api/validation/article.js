@@ -8,20 +8,20 @@ function articleValidate(articleDetails){
         name: Joi.string().required(),
       })
     const schemaArticle = {
-        title : Joi.string().required(),
-        subtitle: Joi.string().required(),
-        summary: Joi.string().required(),
-        detail: Joi.string().required(),
+        title : Joi.string().min(10).max(100).required(),
+        subtitle: Joi.string().min(10).max(100).required(),
+        summary: Joi.string().min(20).max(200).required(),
+        detail: Joi.string().min(50).required(),
         author: Joi.array().items(authorSchema)
         }
     return Joi.validate(articleDetails,schemaArticle)
 }
 function articleValidateUpdate(articleDetails){ 
     const schemaArticle = {
-        title : Joi.string().required(),
-        subtitle: Joi.string().required(),
-        summary: Joi.string().required(),
-        detail: Joi.string().required()
+        title : Joi.string().min(10).max(100).required(),
+        subtitle: Joi.string().min(10).max(100).required(),
+        summary: Joi.string().min(20).max(200).required(),
+        detail: Joi.string().min(50).required()
     }
     return Joi.validate(articleDetails,schemaArticle)
 }

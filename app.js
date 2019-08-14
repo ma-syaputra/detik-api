@@ -8,10 +8,10 @@ if(process.env.NODE_ENV=='development' || 'stagging'){
 }
 
 const port = process.env.PORT || 4009
-const mongoDB = require('./startup/db')
+// const mongoDB = require('./startup/db')
 require('./startup/secure')(app)
 app.use(bp)
-app.use(mongoDB)
+// app.use(mongoDB)
 articleRoutes(app);
 app.listen(port,()=>console.log(`Listening Port ${port}`))
 

@@ -1,6 +1,12 @@
 'use strict'
 
 const mongoose= require('mongoose')
+const db = process.env.MONGO_URL || 'mongodb://localhost:27017/db_detik'
+
+mongoose.connect(db,{useNewUrlParser: true,useFindAndModify: false,useCreateIndex: true})
+var dbm = mongoose.connection;
+dbm.on('error', console.error.bind(console, 'MongoDB connection error:'));
+
 
 
 const {convertLocal} = require('./../helper/localtime')
@@ -12,8 +18,8 @@ const definitionSchema = {
     title : {
         type:String,
         required : true,
-        minlength: 1,
-        maxlength: 20,
+        minlength: 10,
+        maxlength: 100,
         index: {
             unique: true,
             dropDups: true
@@ -22,20 +28,19 @@ const definitionSchema = {
     subtitle : {
         type:String,
         required : true,
-        minlength: 1,
-        maxlength: 20
+        minlength: 10,
+        maxlength: 100
     },
     summary: {
         type:String,
         required : true,
-        minlength: 1,
-        maxlength: 50
+        minlength: 20,
+        maxlength: 200
     },
     detail: {
         type:String,
         required : true,
-        minlength: 1,
-        maxlength: 1000
+        minlength: 100
     },
     author: [{
         name: { 

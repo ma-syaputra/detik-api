@@ -6,6 +6,14 @@ function success_app(data,res) {
             response : data || [] 
         });
 }
+function list_app(data,total,res) {
+    res.status(200).send(
+        {
+            status: true,
+            row : total || [],
+            response : data || [] 
+        });
+}
 function bad_app(data,res) {
     res.status(400).json(
         {
@@ -16,5 +24,6 @@ function bad_app(data,res) {
 }
 module.exports = {
     success_app: success_app,
-    bad_app: bad_app
+    bad_app: bad_app,
+    list_app:list_app
 }
