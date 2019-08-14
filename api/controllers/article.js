@@ -120,7 +120,20 @@ async function delete_article(req,res){
     }
 }
 
+async function detail_article(req,res){
+    const articleDetails= {}
+    articleDetails['_id'] = parseInt(req.query._id)
+    const { error } = articleValidateParams(articleDetails)
+    if(error) return status.bad_app(error,res)
+    const findArticle = await schemaArticle.findOne(articleDetails);
+    console.log(findArticle)
+
+
+    
+}
+
 module.exports={
+    detail_article:detail_article,
     list_article:list_article,
     add_article:add_article,
     update_article:update_article,
